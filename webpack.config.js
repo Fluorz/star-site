@@ -1,0 +1,18 @@
+var path = require('path');
+
+module.exports = {
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "./dist"),
+    filename: "main.js"
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, "./dist"),
+    historyApiFallback: true,
+    inline: true,
+    open: true,
+    hot: true
+  },
+  mode: 'development',
+  devtool: "eval-source-map"
+};
