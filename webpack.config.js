@@ -11,7 +11,8 @@ module.exports = {
     historyApiFallback: true,
     inline: true,
     open: true,
-    hot: true
+    hot: true,
+		disableHostCheck: true
   },
   mode: 'development',
   devtool: "eval-source-map"
