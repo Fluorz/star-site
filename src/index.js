@@ -5,7 +5,7 @@ const config_project = require('./config_file');
 require('three-fly-controls')(THREE);
 var TrackballControls = require('three-trackballcontrols');
 
-// An object to hold all the things needed for our loading screen
+/*******LOADER SCENE*******/
 var loadingScreen = {
 	scene: new THREE.Scene(),
 	camera: new THREE.PerspectiveCamera(90, 1280/720, 0.1, 100),
@@ -39,15 +39,15 @@ var mouse = new THREE.Vector2();
 var raycaster = new THREE.Raycaster();
 var clock = new THREE.Clock();
 var sprites = [];
+var sprites_stars = [];
 var spacesphere;
-var range = config_project.config.range;
+var range_x = config_project.config.range_x;
+var range_y = config_project.config.range_y;
+var range_z = config_project.config.range_z;
 
-
+/**********LOAD PROJECT********/
 async function create_star(star, index) {
 		var spriteMap = new THREE.TextureLoader(loadingManager).load(star.file);
-
-		// spriteMap.minFilter = THREE.LinearFilter;
-		// spriteMap.magFilter = THREE.LinearFilter;
     var materialArray = [];
     materialArray.push(new THREE.MeshBasicMaterial( {color: 0xFFC2AA}));
     materialArray.push(new THREE.MeshBasicMaterial( {color: 0xFFC2AA}));
@@ -59,20 +59,20 @@ async function create_star(star, index) {
     var DiceBlueGeom = new THREE.BoxGeometry(4, 5, 0.3, 1, 1, 1 );
     sprites[index] = new THREE.Mesh( DiceBlueGeom, DiceBlueMaterial );
     sprites[index].name = star.id.toString();
-    sprites[index].position.x = (range * 2) * Math.random() - range;
-    sprites[index].position.y = (range * 2) * Math.random() - range;
-    sprites[index].position.z = (range * 2) * Math.random() - range - 20;
+    sprites[index].position.x = (range_x * 2) * Math.random() - range_x;
+    sprites[index].position.y = (range_y * 2) * Math.random() - range_y;
+    sprites[index].position.z = (range_z * 2) * Math.random() - range_z - 20;
     scene.add(sprites[index]);
 }
 
-var movieScreen = [];
 
+/***********LOAD VIDEO***********/
+var movieScreen = [];
 async function create_video(star, index) {
 	video = document.createElement( 'video' );
 
 	video.src = star.file;
-	video.load(loadingManager); // must call after setting/changing source
-	// video.play();
+	video.load(loadingManager);
 
 	videoImage = document.createElement( 'canvas' );
 	videoImage.width = 480;
@@ -85,7 +85,6 @@ async function create_video(star, index) {
 	videoTexture.minFilter = THREE.LinearFilter;
 	videoTexture.magFilter = THREE.LinearFilter;
 	let newVideoTexture = new THREE.Texture()
-	// let newVideoCover =  new THREE.ImageUtils.loadTexture( star.miniature );
 	let newVideoCover = new THREE.TextureLoader(loadingManager).load(star.miniature);
 	var movieMaterial = new THREE.MeshBasicMaterial( { map: newVideoCover} );
 	config[index].material = new THREE.MeshBasicMaterial( { map: videoTexture, overdraw: true, side:THREE.DoubleSide } );
@@ -99,21 +98,19 @@ async function create_video(star, index) {
 	scene.add(movieScreen[index]);
 }
 
+/**********LOAD STAR****************/
 async function create_star_p(index) {
     var spriteMap = new THREE.TextureLoader(loadingManager);
 		spriteMap = spriteMap.load(config_project.star);
     var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
-    sprites[index] = new THREE.Sprite(spriteMaterial);
-    sprites[index].position.x = 100 * Math.random() - 50;
-    sprites[index].position.y = 100 * Math.random() - 50;
-    sprites[index].position.z = 150 * Math.random() - 50;
-    scene.add(sprites[index]);
+    sprites_stars[index] = new THREE.Sprite(spriteMaterial);
+    sprites_stars[index].position.x = 100 * Math.random() - 50;
+    sprites_stars[index].position.y = 100 * Math.random() - 50;
+    sprites_stars[index].position.z = 150 * Math.random() - 50;
+    scene.add(sprites_stars[index]);
 }
 
 async function loadProject() {
-	for ( var x = 0; x < 350; x++ ) {
-			create_star_p(x + sprites.length)
-	}
 
 	for(var i =0; config.length !== i; i++) {
 		if (config[i].isVideo != true) {
@@ -123,21 +120,24 @@ async function loadProject() {
 			create_video(config[i], i);
 		}
 	}
+
+	for ( var x = 0; x < 350; x++ ) {
+			create_star_p(x + sprites.length)
+	}
+
 	return ;
 }
 
 function myWaiter() {
-  setTimeout(function(){
 		CAN_DISPLAY_SCENE = true;
 		SPLASH_SCREEN = true;
-	}, 0);
 }
 
 function ctrl_trackball() {
     controls = new TrackballControls( camera );
-    controls.rotateSpeed = 1.0;
+    controls.rotateSpeed = 0;
     controls.zoomSpeed = 1.2;
-    controls.panSpeed = 0.8;
+    controls.panSpeed = 0;
     controls.noZoom = false;
     controls.noPan = false;
     controls.staticMoving = true;
@@ -148,18 +148,20 @@ function ctrl_fly(){
     controls = new THREE.FlyControls( camera );
     controls.movementSpeed = 0.1;
     controls.domElement = renderer.domElement;
-    controls.rollSpeed = Math.PI / 2000;
+    controls.rollSpeed = 0;
     controls.autoForward = false;
     controls.dragToLook = false;
 }
 
 async function init() {
 		myWaiter();
+
 		scene = new THREE.Scene();
-    container = document.querySelector( 'div' );
-    document.body.appendChild( container );
-    camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 2, 2000);
-    camera.position.z = 75;
+		// scene.background = new THREE.Color( 0xff0000 );
+		container = document.querySelector( 'div.container' );
+		document.body.appendChild( container );
+		camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 2, 2000);
+		camera.position.z = 100;
 
 		loadingManager = new THREE.LoadingManager();
 		loadProject();
@@ -175,85 +177,37 @@ async function init() {
 			RESOURCES_LOADED = true;
 		};
 
-    var light = new THREE.PointLight(0xffffff);
-    light.position.set(0,250,0);
-    scene.add(light)
 
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
+
+		var light = new THREE.PointLight(0xffffff);
+		light.position.set(0,250,0);
+		scene.add(light)
 
 
-    var spacetex = new THREE.TextureLoader(loadingManager).load(config_project.background_image);
-    var spacesphereGeo = new THREE.SphereGeometry(100,100,100);
-    var spacesphereMat = new THREE.MeshMatcapMaterial();
-    spacesphereMat.map = spacetex;
-
-    spacesphere = new THREE.Mesh(spacesphereGeo,spacesphereMat);
-    spacesphere.material.side = THREE.DoubleSide;
-    spacesphere.material.map.wrapS = THREE.RepeatWrapping;
-    spacesphere.material.map.wrapT = THREE.RepeatWrapping;
-    spacesphere.material.map.repeat.set( 5, 3);
-    scene.add(spacesphere);
-
-    ctrl_trackball();
-
-    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-    document.addEventListener( 'click', onDocumentClick, false );
-    window.addEventListener( 'resize', onWindowResize, false );
-}
-
-var last_star = null;
-
-function onDocumentClick() {
-    if(INTERSECTED) {
-        animation = true;
-        var position = INTERSECTED.position;
+		renderer = new THREE.WebGLRenderer({ antialias: true });
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setClearColor( 0xffffff, 0);
+		document.body.appendChild( renderer.domElement );
 
 
-       // camera.lookAt(position);
-        var from = {
-            x: camera.position.x,
-            y: camera.position.y,
-            z: camera.position.z
-        };
+		var spacetex = new THREE.TextureLoader(loadingManager).load(config_project.background_image);
+		var spacesphereGeo = new THREE.SphereGeometry(100,100,100);
+		var spacesphereMat = new THREE.MeshMatcapMaterial();
+		spacesphereMat.map = spacetex;
 
-        var to = {
-            x: position.x,
-            y: position.y,
-            z: position.z + 6
-        };
+		spacesphere = new THREE.Mesh(spacesphereGeo,spacesphereMat);
+		spacesphere.material.side = THREE.DoubleSide;
+		spacesphere.material.map.wrapS = THREE.RepeatWrapping;
+		spacesphere.material.map.wrapT = THREE.RepeatWrapping;
+		spacesphere.material.map.repeat.set( 5, 3);
+		scene.add(spacesphere);
 
-        if(last_star === INTERSECTED) {
-            console.log("back");
-            to.x = 0;
-            to.y = 0;
-            to.z = range + 3;
-            last_star = null;
-            ctrl_trackball();
-        } else {
-            last_star = INTERSECTED;
-            ctrl_fly();
-        }
+		ctrl_trackball();
 
-        var tween = new TWEEN.Tween(from)
-            .to(to, 300)
-            .easing(TWEEN.Easing.Linear.None)
-            .onUpdate(function () {
-                camera.position.set(this.x, this.y, this.z);
-                camera.lookAt(position);
-            })
-            .onComplete(function () {
-              //  camera.target(position);
-               // controls.target.set( 0, 0, 0 );
-                console.log("rotation: ", camera.rotation);
-                console.log("position: ",camera.position);
-                animation = false;
-                INTERSECTED = null;
-            })
-            .start();
-    }
+		document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+		document.addEventListener( 'click', onDocumentClick, false );
+		window.addEventListener( 'resize', onWindowResize, false );
 }
 
 var animate = function () {
@@ -264,7 +218,6 @@ var animate = function () {
 	}
 	else {
 		if (SPLASH_SCREEN) {
-
 			SPLASH_SCREEN = false;
 			splashScreen();
 		}
@@ -294,16 +247,18 @@ function render() {
         raycaster.setFromCamera(mouse, camera);
         var childrens = scene.children;
         let intersects = raycaster.intersectObjects(childrens);
-        childrens.forEach(object => {
-            if(object.name)
-            {
-                if(object !== last_star)
-                    object.rotation.y += 0.02;
-                else
-                    object.rotation.y = 0;
 
-            }
-        });
+				//Rotation tableau
+        // childrens.forEach(object => {
+        //     if(object.name)
+        //     {
+        //         if(object !== last_star)
+        //             object.rotation.y += 0.02;
+        //         else
+        //             object.rotation.y = 0;
+        //
+        //     }
+        // });
 
         camera.rotation.y = 0;
         camera.rotation.z = 0;
@@ -340,6 +295,7 @@ stars_config();
 init();
 animate();
 
+/******SPLASH SCREEN***********/
 var animation = true;
 
 function splashScreen() {
@@ -351,7 +307,7 @@ function splashScreen() {
 	var to = {
 			x: camera.position.x,
 			y: camera.position.y,
-			z: range + 4
+			z: range_z + 20
 	};
 	var tween = new TWEEN.Tween(from)
 			.to(to, 5000)
@@ -361,8 +317,58 @@ function splashScreen() {
 			})
 			.onComplete(function () {
                 animation = false;
+								var index = Math.floor(Math.random() * sprites.length)
+								INTERSECTED = sprites[index]
+								onDocumentClick();
 			})
 			.start();
+}
+
+/*************EVENT*************/
+var last_star = null;
+
+function onDocumentClick() {
+	if(INTERSECTED) {
+			animation = true;
+			var position = INTERSECTED.position;
+
+		 // camera.lookAt(position);
+			var from = {
+					x: camera.position.x,
+					y: camera.position.y,
+					z: camera.position.z
+			};
+
+			var to = {
+					x: position.x,
+					y: position.y,
+					z: position.z + 8
+			};
+
+			if(last_star === INTERSECTED) {
+					to.x = 0;
+					to.y = 0;
+					to.z = range_z + 20;
+					last_star = null;
+					ctrl_trackball();
+			} else {
+					last_star = INTERSECTED;
+					ctrl_fly();
+			}
+
+			var tween = new TWEEN.Tween(from)
+					.to(to, config_project.config.popup_speed)
+					.easing(TWEEN.Easing.Linear.None)
+					.onUpdate(function () {
+							camera.position.set(this.x, this.y, this.z);
+							camera.lookAt(position);
+					})
+					.onComplete(function () {
+							animation = false;
+							INTERSECTED = null;
+					})
+					.start();
+	}
 }
 
 function onDocumentMouseMove( event ) {
