@@ -129,7 +129,7 @@ project = {
 			"src" : "videos/MOV/That_s-the-rules-iphone.ogv",
 
 			//Miniature de la vidéo
-			"miniature" : "images/14.jpg",
+			//"miniature" : "images/14.jpg",
 			"video" : true,
 			"x_size" : 871,
 			"y_size" : 480,

@@ -160,8 +160,13 @@ async function create_video(star, index) {
 	config[index].video.videoTexture.minFilter = THREE.LinearFilter;
 	config[index].video.videoTexture.magFilter = THREE.LinearFilter;
 	config[index].video.newVideoTexture = new THREE.Texture();
-	config[index].video.newVideoCover = new THREE.TextureLoader(loadingManager).load(star.miniature);
-	config[index].video.movieMaterial = new THREE.MeshBasicMaterial( { map: config[index].video.newVideoCover} );
+	if (!star.miniature) {
+			config[index].video.movieMaterial = new THREE.MeshBasicMaterial( { map: config[index].video.videoTexture} );
+	}
+	else {
+		config[index].video.newVideoCover = new THREE.TextureLoader(loadingManager).load(star.miniature);
+		config[index].video.movieMaterial = new THREE.MeshBasicMaterial( { map: config[index].video.newVideoCover} );
+	}
 	config[index].material = new THREE.MeshBasicMaterial( { map: config[index].video.videoTexture ,side:THREE.DoubleSide } );
 	config[index].video.movieGeometry = new THREE.PlaneGeometry( star.x_size / 100, star.y_size / 100, 4, 4 );
 	config[index].video.movieScreen[index] = new THREE.Mesh( config[index].video.movieGeometry, config[index].video.movieMaterial);
