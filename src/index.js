@@ -280,7 +280,7 @@ async function init() {
 	homePage.scene.add(homePage.camera);
 	homePage.camera.position.x = 0;
 	homePage.camera.position.y = 0;
-	homePage.camera.position.z = 100;
+	homePage.camera.position.z = 200;
 
 	var _header = document.getElementById('header');
 	_header.classList.add('hide')
@@ -293,6 +293,17 @@ async function init() {
 		var geometry = new THREE.TextGeometry( config_project.config.homePage_first_line, {
 			font: font,
 			size: 8,
+			height: 1,
+			curveSegments: 1,
+			bevelEnabled: true,
+			bevelThickness: 0,
+			bevelSize: 0,
+			bevelSegments: 0
+		} );
+
+		var geometry_second_text = new THREE.TextGeometry( config_project.config.homePage_second_text_line, {
+			font: font,
+			size: 5,
 			height: 1,
 			curveSegments: 1,
 			bevelEnabled: true,
@@ -315,14 +326,21 @@ async function init() {
 		//First Line
 		var geometryMat =  new THREE.MeshBasicMaterial({color: config_project.config.homePage_first_line_color});
 		var textHome = new THREE.Mesh(geometry, geometryMat);
-		textHome.position.set(-40, 10, 30)
+		textHome.position.set(config_project.config.homePage_first_line_start_x, 20, 30)
 		textHome.name = "first_line";
 		homePage.scene.add(textHome);
+
+		//second Text line
+		var geometryMat_second_text =  new THREE.MeshBasicMaterial({color:config_project.config.homePage_second_text_color});
+		var textHome_second_text = new THREE.Mesh(geometry_second_text, geometryMat_second_text);
+		textHome_second_text.position.set(config_project.config.homePage_second_text_start_x, 10, 30)
+		textHome_second_text.name = "second_line_text";
+		homePage.scene.add(textHome_second_text);
 
 		//Second
 		var geometryMat_second =  new THREE.MeshBasicMaterial({color: config_project.config.homePage_second_line_color});
 		var textHome_second = new THREE.Mesh(geometry_second, geometryMat_second);
-		textHome_second.position.set(-20, -10, 30)
+		textHome_second.position.set(config_project.config.homePage_second_line_start_x, -20, 30)
 		textHome_second.name = "second_line";
 		homePage.scene.add(textHome_second);
 	} );

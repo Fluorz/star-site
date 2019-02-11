@@ -24,16 +24,22 @@ project = {
 		camera_rotate_speed : "0.5",
 
 		//Epaisseur tableu
-		epaisseur_tableau : "0.8",
+		epaisseur_tableau : "1",
 		//Couleur epaisseur tableau
 		color_epaisseur : "0xFFFFFF",
 
 		homePage_first_line : "John Doe Website",
+		homePage_second_text_line : "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet",
 		homePage_second_line : "View portfolio",
 
 		homePage_first_line_color : "#800080",
+		homePage_second_text_color : "#800080",
 		homePage_second_line_color : "#800080",
-		homePage_second_line_color_hover : "0x009999"
+		homePage_second_line_color_hover : "0x009999",
+
+		homePage_first_line_start_x : -40,
+		homePage_second_text_start_x : -95,
+		homePage_second_line_start_x : -20
 	},
 
 	//Background Image
