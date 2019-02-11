@@ -39,7 +39,9 @@ async function stars_config() {
 				x : project.x,
 				y : project.y,
 				z : project.z,
-				video: undefined
+				video: undefined,
+				x_size : project.x_size,
+				y_size : project.y_size
 			}
 		);
 	}
@@ -141,12 +143,13 @@ async function create_video(star, index) {
 
 	video.src = star.file;
 	video.load(loadingManager);
-
+	console.log(video.src);
+	//Set plan Geometry of size of video
 	config[index].video.index = index;
 	config[index].video.videoImage = document.customCreateElement('canvas', {id: index , opacity : 0.3});
 
-	config[index].video.videoImage.width = 480;
-	config[index].video.videoImage.height = 204;
+	config[index].video.videoImage.width = star.x_size;
+	config[index].video.videoImage.height = star.y_size;
 	config[index].video.videoImageContext = config[index].video.videoImage.getContext( '2d' );
 
 	// background color if no video present
@@ -160,7 +163,7 @@ async function create_video(star, index) {
 	config[index].video.newVideoCover = new THREE.TextureLoader(loadingManager).load(star.miniature);
 	config[index].video.movieMaterial = new THREE.MeshBasicMaterial( { map: config[index].video.newVideoCover} );
 	config[index].material = new THREE.MeshBasicMaterial( { map: config[index].video.videoTexture ,side:THREE.DoubleSide } );
-	config[index].video.movieGeometry = new THREE.PlaneGeometry( 4, 1.5, 4, 4 );
+	config[index].video.movieGeometry = new THREE.PlaneGeometry( star.x_size / 100, star.y_size / 100, 4, 4 );
 	config[index].video.movieScreen[index] = new THREE.Mesh( config[index].video.movieGeometry, config[index].video.movieMaterial);
 
 	let x, y, z;
