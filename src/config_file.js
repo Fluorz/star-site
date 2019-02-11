@@ -123,14 +123,6 @@ project = {
 			"z" : "0"
 		},
 		{
-			"name" : "Project 10",
-			"description" : "2002",
-			"src" : "images/GIF/BLUE.gif",
-			"x" : "10",
-			"y" : "-10",
-			"z" : "0"
-		},
-		{
 			"name" : "first video",
 			"description" : "test",
 			//Video doit etre en .ogv
@@ -158,6 +150,52 @@ project = {
 			"y_size" : 576,
 			"x" : "10",
 			"y" : "0",
+			"z" : "16"
+		},
+		//GIF
+		{
+			"name" : "first video",
+			"description" : "test",
+			//Video doit etre en .ogv
+			"src" : "images/GIF/BEVERLEY.ogv",
+
+			//Miniature de la vidéo
+			"miniature" : "images/GIF/BEVERLEY.gif",
+			"video" : true,
+			"x_size" : 800,
+			"y_size" : 400,
+			"x" : "-20",
+			"y" : "8",
+			"z" : "15"
+		},
+		{
+			"name" : "second video",
+			"description" : "test",
+			//Video doit etre en .ogv
+			"src" : "images/GIF/BLUE.ogv",
+
+			//Miniature de la vidéo
+			"miniature" : "images/GIF/BLUE.gif",
+			"video" : true,
+			"x_size" : 800,
+			"y_size" : 800,
+			"x" : "-18",
+			"y" : "-8",
+			"z" : "16"
+		},
+		{
+			"name" : "second video",
+			"description" : "test",
+			//Video doit etre en .ogv
+			"src" : "images/GIF/GIF-ALEX.ogv",
+
+			//Miniature de la vidéo
+			"miniature" : "images/GIF/GIF-ALEX.gif",
+			"video" : true,
+			"x_size" : 800,
+			"y_size" : 800,
+			"x" : "18",
+			"y" : "8",
 			"z" : "16"
 		}
 	]
