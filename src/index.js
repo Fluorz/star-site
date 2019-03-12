@@ -352,11 +352,20 @@ async function init() {
 
 	PORTFOLIO = false;
 
-	// var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-	// var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-	// var cube = new THREE.Mesh( geometry, material );
-  //
-	// homePage.scene.add(cube);
+	var geometry = new THREE.BoxGeometry( 45, 8, 1 );
+	var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+	var cube = new THREE.Mesh( geometry, material );
+	cube.position.set(config_project.config.homePage_second_line_start_x + 20, -18, 30)
+	cube.name = "test_cube";
+	homePage.scene.add(cube);
+
+	var geometry_2 = new THREE.BoxGeometry( 46, 9, 1 );
+	var material_2 = new THREE.MeshBasicMaterial( {color: 0x000000} );
+	var cube_2 = new THREE.Mesh( geometry_2, material_2 );
+	cube_2.position.set(config_project.config.homePage_second_line_start_x + 20, -18, 29)
+	cube_2.name = "test_cube_2";
+
+	homePage.scene.add(cube_2);
 
 
 	renderer = new THREE.WebGLRenderer({ alpha : true });
@@ -424,26 +433,52 @@ var last_video = undefined;
 var INTERSECTED;
 var video_playing = false;
 
+var box = undefined;
+
 function render_homePage() {
 		raycaster.setFromCamera(mouse, homePage.camera);
 		var childrens = homePage.scene.children;
 		let intersects = raycaster.intersectObjects(childrens);
 
-		if ( intersects.length > 0  && intersects[0].object.name == "second_line")
+
+		if ( intersects.length > 0)
 		{
-			if ( intersects[ 0 ].object != INTERSECTED ) {
-				if ( INTERSECTED )
-				INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+			if ( intersects[0].object.name === "test_cube" ) {
 				INTERSECTED = intersects[ 0 ].object;
-				INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-				INTERSECTED.material.color.setHex(parseInt(config_project.config.homePage_second_line_color_hover));
+				console.log("touch");
+				box = INTERSECTED;
+				box.material.color.setHex(parseInt(config_project.config.homePage_second_line_color_hover));
+
+			}
+
+
+			if (intersects[0].object.name === "second_line") {
+				if ( intersects[ 0 ].object !== INTERSECTED ) {
+					if ( INTERSECTED ) {
+						// INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+						// INTERSECTED = intersects[ 0 ].object;
+						// INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+						//
+					}
+				}
 			}
 		}
 		else
 		{
-			if ( INTERSECTED )
-			INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-			INTERSECTED = null;
+			if(box)
+			{
+				box.material.color.setHex(parseInt("0xffffff"));
+				box = undefined
+			}
+
+			if ( INTERSECTED && INTERSECTED.name == "second_line") {
+				console.log("change color", INTERSECTED.name)
+				// INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+				INTERSECTED = null;
+			}
+			if (  INTERSECTED && INTERSECTED.name == "test_cube" ) {
+				INTERSECTED = null;
+			}
 		}
 		renderer.render(homePage.scene, homePage.camera);
 }
@@ -497,12 +532,12 @@ function render() {
 				if (INTERSECTED.name.charAt(0) === 'v') {
 
 					let index_id_video = parseInt(INTERSECTED.name.slice(1, INTERSECTED.name.length));
+					INTERSECTED.material = config[index_id_video].material;
+					INTERSECTED.material.needsUpdate = true;
+					video_playing = true;
+					config[index_id_video].video.video.play();
 					if(index_id_video !== last_video) {
-						INTERSECTED.material = config[index_id_video].material;
-						INTERSECTED.material.needsUpdate = true;
-						video_playing = true;
 						//config[index_id_video].video.video = config.querySelector("video#"+ index_id_video);
-						config[index_id_video].video.video.play();
 						last_video = index_id_video;
 						document.querySelector("h1").textContent = config[index_id_video].text;
 						document.querySelector("h3").textContent = config[index_id_video].description;
@@ -521,7 +556,7 @@ function render() {
 }
 
 /******SPLASH SCREEN***********/
-var animation = true;
+var animation = false;
 
 function splashScreen() {
 	var from = {
@@ -564,8 +599,9 @@ animate();
 var last_star = null;
 
 function onDocumentClick() {
-	if(INTERSECTED) {
-		if (INTERSECTED.name == "second_line") {
+	if(INTERSECTED && animation === false) {
+		console.log("here");
+		if (INTERSECTED.name == "second_line" || INTERSECTED.name == "test_cube" ) {
 			var _header = document.getElementById('header');
 			_header.classList.remove('hide')
 

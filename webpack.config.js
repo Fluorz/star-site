@@ -12,7 +12,8 @@ module.exports = {
     inline: true,
     open: true,
     hot: true,
-		disableHostCheck: true
+		disableHostCheck: true,
+    port: process.env.PORT || 8081
   },
   mode: 'development',
   devtool: "eval-source-map"
